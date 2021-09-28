@@ -10,6 +10,7 @@ import {
 import Review from "./component/Review/Review";
 import Inventory from "./component/Inventory/Inventory";
 import NotFound from "./component/NotFound/NotFound";
+import ProductDetail from "./component/ProductDetail/ProductDetail";
 
 function App() {
   return (
@@ -19,29 +20,22 @@ function App() {
         <Router>
             <Switch>
                 <Route path="/shop">
-                    <Shop>
-
-                    </Shop>
+                    <Shop></Shop>
                 </Route>
                 <Route path="/review">
-                    <Review>
-
-                    </Review>
+                    <Review></Review>
                 </Route>
                 <Route path="/inventory">
-                    <Inventory>
-
-                    </Inventory>
+                    <Inventory></Inventory>
                 </Route>
                 <Route exact path="/">
-                    <Shop>
-
-                    </Shop>
+                    <Shop></Shop>
+                </Route>
+                <Route path="/product/:productKey">
+                    <ProductDetail></ProductDetail>
                 </Route>
                 <Route path="*">
-                    <NotFound>
-
-                    </NotFound>
+                    <NotFound></NotFound>
                 </Route>
             </Switch>
         </Router>
