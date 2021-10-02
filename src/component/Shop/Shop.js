@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import fakeData from "../../fakeData";
 import "./shop.css";
 import Product from "../Product/Product";
 import Cart from "../Cart/Cart";
-import {addToDatabaseCart} from "../../utilities/databaseManager";
+import {addToDatabaseCart, getDatabaseCart} from "../../utilities/databaseManager";
 
 const Shop = () => {
 
@@ -11,12 +11,35 @@ const Shop = () => {
     const [products, setProducts] = useState(first10);
     const [cart, setCard] = useState([]);
 
+    useEffect(() =>{
+        const savedCart = getDatabaseCart();
+        const  productKeys = Object.keys(savedCart);
+        const previousCart = productKeys.map( existKey => {
+            const product = fakeData.find( pd => pd.key === existKey)
+            product.quantity = savedCart[existKey];
+            return product;
+        })
+        //console.log(productKeys);
+        setCard(previousCart);
+    } ,[])
+
     const handleAddProduct = (products) => {
-        //console.log("Product Added", products)
-        const newCart = [...cart,products];
+        const toBeAddedKey = products.key;
+        const sameProduct = cart.find( pd => pd.key === toBeAddedKey); //same product count kore tar 1ta array dibe
+        //console.log("cart",cart +    "same Product",sameProduct);
+        let count = 1;
+        let newCart;
+        if (sameProduct){
+            count = sameProduct.quantity + 1;
+            sameProduct.quantity = count;
+            const others = cart.filter(pd => pd.key !== toBeAddedKey);
+            newCart = [...others, sameProduct];
+        }
+        else {
+            products.quantity = 1;
+            newCart = [...cart,products];
+        }
         setCard(newCart);
-        const sameProduct = newCart.filter( pd => pd.key === products.key);
-        const count = sameProduct.length;
         addToDatabaseCart(products.key, count);
     };
     return (
